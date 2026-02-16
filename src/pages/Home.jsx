@@ -7,6 +7,21 @@ function Home(){
   const [searchQuery, setSearchQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadPopularMovies = async () => {
+      try {
+        const data = await getPopularMovies();
+        setMovies(data);
+      } catch (err) {
+        setError("Failed to load popular movies");
+      }finally {
+        setLoading(false);
+      }
+    }
+    loadPopularMovies();
+  }, []);
 
   const handleSearch = (e) =>{
     e.preventDefault();
