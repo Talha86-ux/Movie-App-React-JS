@@ -17,9 +17,10 @@
 
 .favorites-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.8rem;
   padding-top: 0.75rem;
+  max-width: 580px;
 }
 
 .favorites-empty {
