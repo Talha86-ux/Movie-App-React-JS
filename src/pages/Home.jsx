@@ -1,22 +1,51 @@
 import MovieCard from "../components/MovieCard";
 import { useState, useEffect } from "react";
+import '../css/Home.css';
+import { searchMovies, getPopularMovies } from "../services/api";
 
 function Home(){
   const [searchQuery, setSearchQuery] = useState("");
+  const [movies, setMovies] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleSearch = (e) =>{
+  useEffect(() => {
+    const loadPopularMovies = async () => {
+      try {
+        const data = await getPopularMovies();
+        setMovies(data);
+      } catch (err) {
+        setError("Failed to load popular movies");
+      }finally {
+        setLoading(false);
+      }
+    }
+    loadPopularMovies();
+  }, []);
+
+  const handleSearch = async (e) =>{
     e.preventDefault();
-    alert(searchQuery);
+    if(searchQuery.trim() === "") return;
+    if(loading) return;
+
+    setLoading(true);
+
+    try{
+      const searchResults = await searchMovies(searchQuery);
+      setMovies(searchResults);
+      setError(null);
+    }catch(err){
+      setError("Failed to search movies");
+    }finally{
+      setLoading(false);
+    }
   }
-
-
-  const movies = []
 
   return(
     <div className="home">
       <form onSubmit={handleSearch} className="search-form">
         <input
+          className="search-input"
           type="text"
           placeholder="Search for a movie..."
           value={searchQuery}
@@ -26,13 +55,17 @@ function Home(){
       </form>
 
       {error && <div className="error-message">{error}</div>}
-
-      <div className="movie-grid">
+      {loading ? (
+        <div className="loading">Loading...</div>
+      ) : (
+      <div className="movies-grid">
         {movies.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}
       </div>
+      )}
     </div>
+
   )
 }
 
