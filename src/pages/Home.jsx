@@ -45,6 +45,7 @@ function Home(){
     <div className="home">
       <form onSubmit={handleSearch} className="search-form">
         <input
+          className="search-input"
           type="text"
           placeholder="Search for a movie..."
           value={searchQuery}
@@ -57,7 +58,7 @@ function Home(){
       {loading ? (
         <div className="loading">Loading...</div>
       ) : (
-      <div className="movie-grid">
+      <div className="movies-grid">
         {movies.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}
